@@ -196,9 +196,37 @@
     <script src="js/scripts.js"></script>
 	<script>
 		$(window).load(function() {
-		function returnhtml()
+		var htmlcode = '';
+		 $.ajax({
+            type: 'GET',
+            url: '/contacts',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+			success: function(msg){
+				debugger;
+				j = msg.length - 1;
+					for(i=j;i>=0;i--)
+					{
+						console.log(msg[i]);
+						var k = msg[i];
+						for(n in k)
+						{
+							//console.log(k[n].namechoices+"  "+k[n].number);
+							htmlcode += returnhtml(k[n].namechoices,k[n].number);
+						}
+					}
+					debugger;
+					$("#tbody").html(htmlcode);
+				},
+				error:function(jqXHR, textStatus, errorThrown){
+					debugger;
+                 alert(textStatus);
+               }
+        });
+		function returnhtml(name,number)
 		{
-			return $('<tr><td>123</td><td>'+$("#txtEmail").val()+'</td><td>'+$("#txtPhone").val()+'</td><td>Active</td></tr>');
+		debugger;
+			return '<tr><td>123</td><td>'+name+'</td><td>'+number+'</td><td>Active</td></tr>';
 		}
 		
 		$("#addMe").click(function(){
@@ -209,18 +237,25 @@
 			data.number = $("#txtPhone").val();
 			
 			datavalue[$("#txtEmail").val()] = data;
-											
+			debugger;								
 			console.log('datavalue---',datavalue);
-			$.ajax({
-				url: "/contacts",
-				data: datavalue,
-				contentType: "application/json",
-				dataType: 'json',
-				type:"POST",
-				success: function(){
-					alert("save");
-				}
-				});
+		
+				
+				 $.ajax({
+            type: 'POST',
+            url: '/contacts',
+            data: JSON.stringify(datavalue),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+			success: function(){
+				debugger;
+					//saves
+				},
+      error:function(jqXHR, textStatus, errorThrown){
+	  debugger;
+                       alert(textStatus);
+                        }
+        });
 		});
 		});
 	</script>
